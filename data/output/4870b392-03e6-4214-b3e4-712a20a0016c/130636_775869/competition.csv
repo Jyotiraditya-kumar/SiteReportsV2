@@ -1,0 +1,13 @@
+id,name,number_of_votes,rating,lat,lng,reviews_per_day,competitor_type,distance,type
+ChIJJ6_LbZsZrjsRp64y0s1maGs,Starbucks,363,4.300000190734863,13.060235023498535,77.5875473022461,1.0401960941039967,anchor_competitor,0.39,anchor_competitor
+ChIJY12GqrEZrjsRGcjR-X3RPIU,Third Wave Coffee,142,4.699999809265137,13.061092376708984,77.58721923828125,0.8612729792661419,anchor_competitor,0.29,anchor_competitor
+ChIJSw2r0iMYrjsR7MibViO1IM0,Lassi Shop,1072,4.099999904632568,13.063669204711914,77.58766174316406,0.4536281635595455,anchor_competitor,0.08,anchor_competitor
+ChIJ0T4deGsRrjsR2Q4ax0zrVTE,SKANDA TAEKWONDO ACADEMY,136,5.0,13.062339782714844,77.58719635009766,0.1796989629459435,secondary_competitor,0.15,secondary_competitor
+ChIJnU2Kn7IXrjsRjgsNuGviGxk,Mithun's Fitness Factory,89,5.0,13.060925483703612,77.58746337890625,0.0660439954219253,secondary_competitor,0.31,secondary_competitor
+ChIJIwL-JisZrjsRsAUVk7llx2M,Harry's Dance N Fitness Academy-Sahakarnagar,75,5.0,13.064104080200195,77.58618927001953,0.0517666193675811,secondary_competitor,0.1,secondary_competitor
+ChIJxU93_W4ZrjsRCK2zUD--g8E,SukhoThai Spa,53,3.799999952316284,13.063847541809082,77.58827209472656,0.0330096241522838,secondary_competitor,0.15,secondary_competitor
+ChIJWf6ciiEYrjsRUXCXaPMBqDE,Yug Yoga/Adityaa Fitness World,62,4.699999809265137,13.064820289611816,77.58382415771484,0.0289863333453334,secondary_competitor,0.36,secondary_competitor
+ChIJK67mniYYrjsRIaN12bRDAPM,Smith Gym,58,4.599999904632568,13.06350040435791,77.58639526367188,0.0253769826685569,secondary_competitor,0.06,secondary_competitor
+ChIJkeVDyRgYrjsR7eiP5X7P1EI,Yoga & Meditation Center,7,4.400000095367432,13.063069343566896,77.58323669433594,0.0003583263092124,primary_competitor,0.41,primary_competitor
+ChIJ0awHSCwZrjsRgqesu7xMY-w,MIND.FIT,6,4.800000190734863,13.063773155212402,77.58525848388672,0.0003071368364677,primary_competitor,0.18,primary_competitor
+ChIJn-Fau8sZrjsRvZSl15_ExCs,The Art Of Living Happiness Center,0,0.0,13.063152313232422,77.58309936523438,0.0,primary_competitor,0.42,primary_competitor

@@ -1,0 +1,8 @@
+id,name,number_of_votes,rating,lat,lng,reviews_per_day,competitor_type,distance,type
+ChIJi-Zp3xAVrjsROTG6aYtRG2I,Starbucks Coffee,4488,4.199999809265137,12.906020164489746,77.59383392333984,1.3924065032746993,anchor_competitor,0.15,anchor_competitor
+ChIJQSMAQREVrjsRziPDefyBIrM,Café Coffee Day,1967,4.199999809265137,12.906102180480955,77.59187316894531,0.6176432675105583,anchor_competitor,0.09,anchor_competitor
+ChIJe7PnP08VrjsRw1dRA53NcIU,Qmin,56,3.700000047683716,12.906129837036133,77.59111022949219,0.0961213952192161,anchor_competitor,0.16,anchor_competitor
+ChIJ23o9PBEVrjsRKMdGTT7t1CI,Play on Fitness JP Nagar,107,4.699999809265137,12.906244277954102,77.5928726196289,0.0413573277411469,secondary_competitor,0.04,secondary_competitor
+ChIJnXqNRxcVrjsR4QzvMYn55T0,"""Urhythmix Studio"" and ""Shakthi Yoga""",59,4.5,12.904255867004396,77.59481048583984,0.0257762236757294,secondary_competitor,0.35,secondary_competitor
+ChIJuw5WcA8VrjsRqOPMrBdrkrc,The Art of Living,19,4.400000095367432,12.908051490783691,77.59551239013672,0.000972599982148,primary_competitor,0.36,primary_competitor
+ChIJjUDpqn0VrjsR6XN3NLsSeoU,Akshar yoga,0,0.0,12.904244422912598,77.59477996826172,0.0,primary_competitor,0.35,primary_competitor

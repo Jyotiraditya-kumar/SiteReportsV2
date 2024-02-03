@@ -1,0 +1,16 @@
+{
+    "data": {
+        "500_buffer": [
+            {
+                "trans_type": "buy",
+                "median_price": 46070152.0
+            }
+        ],
+        "15m_catchment": [
+            {
+                "trans_type": "buy",
+                "median_price": 28900000.0
+            }
+        ]
+    }
+}

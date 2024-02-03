@@ -1,0 +1,28 @@
+{
+    "data": {
+        "500_buffer": [
+            {
+                "EWS_HH": 312,
+                "LIG_HH": 1006,
+                "MIG_HH": 1180,
+                "AIG_HH": 902,
+                "EIG_HH": 69,
+                "middle+affluent": 2151,
+                "total_hh": 3469,
+                "median_household_income": 1471485.2322322854
+            }
+        ],
+        "15m_catchment": [
+            {
+                "EWS_HH": 23379,
+                "LIG_HH": 71125,
+                "MIG_HH": 67459,
+                "AIG_HH": 50837,
+                "EIG_HH": 3327,
+                "middle+affluent": 121623,
+                "total_hh": 216127,
+                "median_household_income": 1013307.1364616016
+            }
+        ]
+    }
+}

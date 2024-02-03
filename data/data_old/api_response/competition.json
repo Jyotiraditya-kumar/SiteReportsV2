@@ -1,0 +1,129 @@
+{
+    "data": {
+        "500_buffer": [
+            {
+                "id": "ChIJZ0FegEs9rjsRZFR-C-hVwqQ",
+                "name": "Orion Mall",
+                "number_of_votes": 183294,
+                "ratings": 4.5,
+                "lat": 13.011023,
+                "lng": 77.55471519999999,
+                "reviews_per_day": 499.7281072434598,
+                "distance": 0.0,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJCUMusVM9rjsREFoNQDA52s0",
+                "name": "Metro cash and carry Yashwantpur",
+                "number_of_votes": 20,
+                "ratings": 3.8,
+                "lat": 13.014254,
+                "lng": 77.554683,
+                "reviews_per_day": 0.0687545202217667,
+                "distance": 0.36,
+                "type": "Competitor"
+            }
+        ],
+        "15m_catchment": [
+            {
+                "id": "ChIJZ0FegEs9rjsRZFR-C-hVwqQ",
+                "name": "Orion Mall",
+                "number_of_votes": 183294,
+                "ratings": 4.5,
+                "lat": 13.011023,
+                "lng": 77.55471519999999,
+                "reviews_per_day": 499.7281072434598,
+                "distance": 0.0,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJoRKfACMWrjsRrWqiP9PBT5Y",
+                "name": "Mantri Square Mall",
+                "number_of_votes": 144046,
+                "ratings": 4.4,
+                "lat": 12.9916302,
+                "lng": 77.5711719,
+                "reviews_per_day": 238.12974014404108,
+                "distance": 2.79,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJlb8QkIwXrjsRGUxSwTzIMhQ",
+                "name": "Lulu Mall",
+                "number_of_votes": 39828,
+                "ratings": 4.4,
+                "lat": 12.9818195,
+                "lng": 77.5631172,
+                "reviews_per_day": 136.9195439032802,
+                "distance": 3.36,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJbQb8IPs9rjsR4j-RbzJFroA",
+                "name": "GT World Mall",
+                "number_of_votes": 46500,
+                "ratings": 4.3,
+                "lat": 12.9738099,
+                "lng": 77.5515904,
+                "reviews_per_day": 29.943766893677623,
+                "distance": 4.13,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJj9VQyNE9rjsRsVrZQsVMFmM",
+                "name": "Vaishnavi Sapphire Centre",
+                "number_of_votes": 31857,
+                "ratings": 4.1,
+                "lat": 13.0244704,
+                "lng": 77.54876449999999,
+                "reviews_per_day": 17.54100991925289,
+                "distance": 1.62,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJEVTX0_U9rjsRrLNuiOLZgbs",
+                "name": "Golden Heights",
+                "number_of_votes": 8711,
+                "ratings": 4.0,
+                "lat": 12.9829609,
+                "lng": 77.55969639999999,
+                "reviews_per_day": 2.4543917364835623,
+                "distance": 3.15,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJCUMusVM9rjsREFoNQDA52s0",
+                "name": "Metro cash and carry Yashwantpur",
+                "number_of_votes": 20,
+                "ratings": 3.8,
+                "lat": 13.014254,
+                "lng": 77.554683,
+                "reviews_per_day": 0.0687545202217667,
+                "distance": 0.36,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJLfcwwb89rjsRuEH5q3deUfQ",
+                "name": "Platinum Mall",
+                "number_of_votes": 43,
+                "ratings": 4.3,
+                "lat": 12.9887859,
+                "lng": 77.5378662,
+                "reviews_per_day": 0.0152267051555192,
+                "distance": 3.07,
+                "type": "Competitor"
+            },
+            {
+                "id": "ChIJez6EsCc9rjsR1OgmK7Vjxvs",
+                "name": "Rock Line Mall",
+                "number_of_votes": 0,
+                "ratings": 0.0,
+                "lat": 13.0407728,
+                "lng": 77.5183186,
+                "reviews_per_day": 0.0,
+                "distance": 5.14,
+                "type": "Competitor"
+            }
+        ]
+    }
+}

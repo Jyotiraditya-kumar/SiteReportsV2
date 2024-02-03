@@ -1,0 +1,12 @@
+{
+    "data": {
+        "500_buffer": {
+            "college": 6,
+            "school": 7
+        },
+        "15m_catchment": {
+            "college": 357,
+            "school": 721
+        }
+    }
+}

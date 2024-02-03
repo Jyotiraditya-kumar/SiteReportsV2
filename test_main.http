@@ -1,0 +1,83 @@
+# Test your FastAPI endpoints
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=13.011026921074786&lng=77.55473637957641&name=orion mall&travel_mode=driving&cost_type=buffer&cost=500&report_id=4d83c559-fa5a-4c9d-98a3-1bafc546e0fb
+Accept: application/json
+
+
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=13.0009569&lng=77.6325712&name=Orion Avenue&travel_mode=driving&cost_type=time&cost=15
+Accept: application/json
+
+
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=13.0552603&lng=77.7638939&name=Orion Uptown&travel_mode=driving&cost_type=buffer&cost=500
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=12.906501&lng=77.592581&name=Cultfit&travel_mode=driving&cost_type=buffer&cost=1000
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=13.063665&lng=77.586943&name=Cultfit&travel_mode=driving&cost_type=buffer&cost=1000
+Accept: application/json
+
+
+###
+GET http://127.0.0.1:8000/site_report/40b37f44-ff12-481a-b962-7b7b203026e2/130631_776205/cft
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/40b37f44-ff12-481a-b962-7b7b203026e2/130631_776205/shopping_mall
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/130110_775547/population
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/population/500_catchment
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/cf7eb825-a703-4b10-abea-066546376aa8/companies/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/130110_775547/education/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/085867a0-6608-485c-a40d-c809825af8ef/130636_775869/projects/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/1/affluence
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/130110_775547/income
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/c763cfe3-eb59-4598-ad6b-3223a5844bdf/129065_775925/competition/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/top_brands/500_catchment
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/1f78f3ac-d799-470b-9738-2c4da5053cee/130110_775547/category_count/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/cf7eb825-a703-4b10-abea-066546376aa8/property_price/
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/cf7eb825-a703-4b10-abea-066546376aa8/medical
+Accept: application/json
+
+###
+GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/cf7eb825-a703-4b10-abea-066546376aa8/high_street
+Accept: application/json

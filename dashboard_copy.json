@@ -1,0 +1,266 @@
+[
+  {
+    "range": "F9",
+    "values": [
+      [
+        "data.i500mtb.population.total_population"
+      ]
+    ]
+  },
+  {
+    "range": "G9",
+    "values": [
+      [
+        "data.i15mind.population.total_population"
+      ]
+    ]
+  },
+  {
+    "range": "E23",
+    "values": [
+      [
+        "data.i15mind.population.total_population"
+      ]
+    ]
+  },
+  {
+    "range": "F10",
+    "values": [
+      [
+        "data.i500mtb.household_distribution.total_hh"
+      ]
+    ]
+  },
+  {
+    "range": "G10",
+    "values": [
+      [
+        "data.i15mind.household_distribution.total_hh"
+      ]
+    ]
+  },
+  {
+    "range": "G23",
+    "values": [
+      [
+        "data.i15mind.household_distribution.total_hh"
+      ]
+    ]
+  },
+  {
+    "range": "H26",
+    "values": [
+      [
+        "data.i15mind.household_distribution.EWS_HH"
+      ]
+    ]
+  },
+  {
+    "range": "H27",
+    "values": [
+      [
+        "data.i15mind.household_distribution.LIG_HH"
+      ]
+    ]
+  },
+  {
+    "range": "H28",
+    "values": [
+      [
+        "data.i15mind.household_distribution.MIG_HH"
+      ]
+    ]
+  },
+  {
+    "range": "H29",
+    "values": [
+      [
+        "data.i15mind.household_distribution.AIG_HH"
+      ]
+    ]
+  },
+  {
+    "range": "H30",
+    "values": [
+      [
+        "data.i15mind.household_distribution.EIG_HH"
+      ]
+    ]
+  },
+  {
+    "range": "F11",
+    "values": [
+      [
+        "data.i500mtb.household_distribution.middle+affluent"
+      ]
+    ]
+  },
+  {
+    "range": "L26",
+    "values": [
+      [
+        "data.i15mind.household_distribution.median_household_household_distribution"
+      ]
+    ]
+  },
+  {
+    "range": "G11",
+    "values": [
+      [
+        "data.i15mind.household_distribution.middle+affluent"
+      ]
+    ]
+  },
+  {
+    "range": "F12",
+    "values": [
+      [
+        "data.i500mtb.affluence"
+      ]
+    ]
+  },
+  {
+    "range": "G12",
+    "values": [
+      [
+        "data.i15mind.affluence"
+      ]
+    ]
+  },
+  {
+    "range": "J23",
+    "values": [
+      [
+        "data.i15mind.affluence"
+      ]
+    ]
+  },
+  {
+    "range": "J9",
+    "values": [
+      [
+        "data.i500mtb.competition.count"
+      ]
+    ]
+  },
+  {
+    "range": "K9",
+    "values": [
+      [
+        "data.i15mind.competition.count"
+      ]
+    ]
+  },
+  {
+    "range": "J12",
+    "values": [
+      [
+        "data.i500mtb.avg_cost_for_two"
+      ]
+    ]
+  },
+  {
+    "range": "K12",
+    "values": [
+      [
+        "data.i15mind.avg_cost_for_two"
+      ]
+    ]
+  },
+  {
+    "range": "L23",
+    "values": [
+      [
+        "data.i15mind.avg_cost_for_two"
+      ]
+    ]
+  },
+  {
+    "range": "G134",
+    "values": [
+      [
+        "data.i15mind.demand_generators.school"
+      ]
+    ]
+  },
+  {
+    "range": "I134",
+    "values": [
+      [
+        "data.i15mind.demand_generators.college"
+      ]
+    ]
+  },
+  {
+    "range": "G140",
+    "values": [
+      [
+        "data.i15mind.demand_generators.hospital"
+      ]
+    ]
+  },
+  {
+    "range": "G143",
+    "values": [
+      [
+        "data.i15mind.demand_generators.clinic"
+      ]
+    ]
+  },
+  {
+    "range": "E134",
+    "values": [
+      [
+        "data.i15mind.demand_generators.companies.company_count"
+      ]
+    ]
+  },
+  {
+    "range": "G118",
+    "values": [
+      [
+        "data.i15mind.projects.num_units"
+      ]
+    ]
+  },
+  {
+    "range": "E118",
+    "values": [
+      [
+        "data.i15mind.projects.count_projects"
+      ]
+    ]
+  },
+  {
+    "range": "J118",
+    "values": [
+      [
+        "data.i15mind.property_price.buy"
+      ]
+    ]
+  },
+  {
+    "range": "I118",
+    "values": [
+      [
+        "data.i15mind.property_price.rent"
+      ]
+    ]
+  },
+  {
+    "range": "F5",
+    "values": [
+      [
+        "data.i15mind.revenue_score"
+      ]
+    ]
+  },
+  {
+    "range": "F17",
+    "values": [
+      [
+        "data.i15mind.site_name"
+      ]
+    ]
+  }
+]

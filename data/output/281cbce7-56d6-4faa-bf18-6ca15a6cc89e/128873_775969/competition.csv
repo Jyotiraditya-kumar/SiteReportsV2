@@ -1,0 +1,8 @@
+id,name,number_of_votes,rating,lat,lng,reviews_per_day,competitor_type,distance,type
+ChIJbbebFSkVrjsRVtf4gVLhicw,Reliance Smart,3689,4.0,12.89088535308838,77.59761810302734,1.0724316890977432,anchor_competitor,0.4,anchor_competitor
+ChIJ0_L7QrcVrjsRWsAhcbcvNgg,Stayfit HUB Fitness Center - Bannerghatta Main Road,1102,4.900000095367432,12.886972427368164,77.59880065917969,0.711222899523653,primary_competitor,0.21,primary_competitor
+ChIJO33vPikVrjsR6e_RS48qDcA,Domino's Pizza,1247,3.700000047683716,12.890219688415527,77.59772491455078,0.4755126339224672,anchor_competitor,0.33,anchor_competitor
+ChIJyR7swTwVrjsRcPutGD7C_SM,Sanatan Yoga Studio Bangalore,89,5.0,12.89060115814209,77.59764099121094,0.2055614509404885,secondary_competitor,0.37,secondary_competitor
+ChIJZXqL1zEVrjsRtrFSNrYI1HM,Triton Fitness Studio,375,4.400000095367432,12.884687423706056,77.59609985351562,0.1495739455408466,secondary_competitor,0.31,secondary_competitor
+ChIJh5KbnDkVrjsRuTou2blfu3A,Stayfit Health & Fitness World pvt ltd,15,4.699999809265137,12.886664390563965,77.59955596923828,0.0007678420911694,primary_competitor,0.3,primary_competitor
+ee71c209-bd72-47a7-af74-47b3f5304f9a,Dominos Pizza,0,0.0,12.89009753,77.5976767,0.0,anchor_competitor,0.31,anchor_competitor

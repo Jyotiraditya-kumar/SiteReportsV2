@@ -1,0 +1,56 @@
+id,name,lat,lng,source,category,number_of_votes,reviews_per_day
+ChIJ441Kr5I9rjsRm-EYn-cfOhE,Narayana Nethralaya Eye Hospital,13.011795997619627,77.55216979980469,gmaps_v2,hospital,53561,201.07772824729767
+ChIJiR-5XXg9rjsRcPKp8tB-aY0,NU Hospitals (West),13.012133598327637,77.55274963378906,gmaps_v2,hospital,3624,1.1984466876483328
+ChIJx7977MI9rjsRY6fpPpJJEb4,SPECTRUM DIAGNOSTICS AND HEALTHCARE,13.007613182067873,77.55461883544922,gmaps_v2,clinic,552,0.39087145727666
+ChIJNSOSoXg9rjsRyqe-j79Znp0,"Lenskart.com at Orion Mall, Malleshwaram West",13.011481285095217,77.55513000488281,gmaps_v2,clinic,728,0.3591763550866948
+ChIJC3qgfbpRUjoRC_nBgC4wng0,Dr Mohankumar Urologist,13.011262893676758,77.55694580078125,gmaps_v2,clinic,284,0.2964689021247023
+ChIJ1dcMpF09rjsRljq4fa5u6Xw,Dr. Mohammed Rehan Sayeed | Best Cardiac Surgeon & CTVS in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014219284057615,77.55603790283203,gmaps_v2,hospital,48,0.2143550372115734
+ChIJsZvkFoA9rjsRbRgheEAyQms,NU Fertility (West),13.012107849121094,77.55279541015625,gmaps_v2,clinic,236,0.1357923624601193
+ChIJD-Y_f4E9rjsRZalDy9FBjRQ,Dr Bhat's Homeopathy,13.008177757263184,77.5561294555664,gmaps_v2,clinic,148,0.1111941215777874
+ChIJHW5-ExU9rjsRszbS981b5Js,KRIDE Corporate Office,13.01172924041748,77.55412292480469,gmaps_v2,clinic,48,0.07704819649683
+ChIJ_VpxP6E9rjsRer8HuUoywK0,Medfin Clinic-Rajajinagar Bangalore,13.007593154907228,77.55459594726562,gmaps_v2,clinic,40,0.0579213243389024
+ChIJ5R3LK4I9rjsRgF6Nq2TrVqg,Mamatha Nursing Home,13.00794506072998,77.55601501464844,gmaps_v2,hospital,58,0.0244095402977559
+ChIJWx6-nkIWrjsRh8RCApu-KIk,The Heart Center@Manipal hospitals Yeshwanthpur,13.014409065246582,77.55628967285156,gmaps_v2,clinic,41,0.015652976895819
+ChIJIWpJD0E9rjsRt7kNc609peQ,Dr. Jyothi Shenoy | Best Obstetrician-gynecologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,27,0.0013761109901092
+ChIJ3Q3TS_M9rjsRNnd2r8JEdRE,Dr. Supraja Chandrasekar | Best Pediatrician in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,25,0.0012741768426937
+ChIJ-6jGNXk9rjsRbx7qWUJOw_0,"Rivaara Labs Pvt Ltd, C/O Columbia Asia Referral Hospital,",13.014663696289062,77.55592346191406,gmaps_v2,hospital,17,0.0008702210366587
+ChIJ-aPbRwk9rjsRS6h84d5aKHM,Dr. Varsha Monica Reddy - Pediatric Neurologist,13.014189720153809,77.55606842041016,gmaps_v2,clinic,16,0.0008190315639141
+ChIJD5mVbyw9rjsR5Z5pQ-o7pPc,Parkinsons Disease and Movement Disorders Clinic,13.007115364074709,77.55453491210938,gmaps_v2,clinic,16,0.0008154731793239
+ChIJFRodEGg9rjsRUjx3NCyD0XQ,Dr. Khushal D Shah | Best Neonatologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014188766479492,77.55606842041016,gmaps_v2,hospital,16,0.0008154731793239
+ChIJV7Smyns9rjsRPHbO4mbMoWg,Dr. Praveen Kumar M | Best Rheumatologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.01394748687744,77.55594635009766,gmaps_v2,hospital,13,0.0006625719582007
+ChIJB1VVGb4XrjsRMu4VyglM22c,Amplifon (India) Pvt. Ltd.,13.014134407043455,77.55619049072266,gmaps_v2,clinic,12,0.0006142736729355
+ChIJO7oT4f49rjsRWkUFKeFUmfk,Dr. Shafalika S B | Best Gynecologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,11,0.0005630842001909
+ChIJNYogtYM9rjsRVgE8f37KnCg,Genematrix Molecular Diagnostics and Research,13.00757122039795,77.55460357666016,gmaps_v2,clinic,11,0.0005606378107852
+ChIJizko4zs9rjsRMBhkv3bNmYY,Dr. Vinay Munikoty Venkatesh | Best Pediatric Hematologist in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014185905456545,77.55607604980469,gmaps_v2,hospital,11,0.0005606378107852
+ChIJ-UmXiSkWrjsRwjCcwGZzfuQ,Vivek Bhaskar Haldipur Dr,13.00793743133545,77.55719757080078,gmaps_v2,clinic,10,0.0005118947274463
+ChIJpaBpKoE9rjsRLVZcoin0JqI,Dr. Rajeshwari Janakiraman | Best Endocrinologist in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.01430320739746,77.55612182617188,gmaps_v2,hospital,10,0.0005096707370774
+ChIJuQ2_zHg9rjsRzl4o7KjTlL8,First Eat Right,13.012353897094728,77.55613708496094,gmaps_v2,clinic,9,0.0004607052547016
+ChIJOyxQ9Es9rjsRzCU_7kOpjFo,Dr. Vidyasagar Ramappa | Best Gastroenterologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.0142822265625,77.55614471435547,gmaps_v2,hospital,9,0.0004607052547016
+ChIJ-V3rOok9rjsRhLWS3D0LrYs,Dr. Prashanth P N | Best Gastroenterologist in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014219284057615,77.55612182617188,gmaps_v2,hospital,9,0.0004587036633697
+ChIJadjlnoE9rjsR9W1BYhrgByg,Blumo Hearing & Speech Clinic,13.008023262023926,77.55745697021484,gmaps_v2,clinic,9,0.0004587036633697
+ChIJ2V_O5909rjsR5-D9yxxUlVU,Dr. Deepak Kumar Chithralli | Best Nephrologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,8,0.000409515781957
+ChIJUxGe1MM9rjsR9UvaThQAmsI,Sriraksha Heart Centre,13.007318496704102,77.55453491210938,gmaps_v2,clinic,7,0.0003583263092124
+ChIJCZgEB089rjsRQ58gg_kI_sI,Dr. Sundar C Ingaleshwar | Best Pediatrician in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014190673828123,77.55606842041016,gmaps_v2,hospital,6,0.0003058024422464
+ChIJpc1maTA9rjsRyyMnADxdOTU,Dr. Abdul Majeed | Best Internal Medicine in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,5,0.0002548353685387
+ChIJ-4VhJIQ9rjsRABdQuTxGdis,Dr. Chirag D | Best Cardiologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014198303222656,77.55606079101562,gmaps_v2,hospital,4,0.0002047578909785
+ChIJ57EctcY9rjsR4NrOSjztJuU,Dr. Avinash K M | Best Neurosurgeon in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,4,0.0002047578909785
+ChIJwzpoWKM9rjsRnDH3NmmV02s,Dr. Kamini Kurpad | Best Orthopaedic Surgeon in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014187812805176,77.55606842041016,gmaps_v2,hospital,4,0.0002047578909785
+ChIJu1lkYcg9rjsRDsvbO66lH3k,Dr. Srividya S | Best Internal Medicine in Yeswanthpur | Manipal Hospital Yeswanthpur,13.01414680480957,77.55603790283203,gmaps_v2,hospital,4,0.0002047578909785
+ChIJlxPOSJ09rjsRvVLGwPxd-5A,Dr. Guruprasad H | Best Neurologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014174461364746,77.55607604980469,gmaps_v2,hospital,4,0.0002038682948309
+ChIJpcF4agY9rjsR-LPsSAjxI3c,Dr. Shalini Sharma | Best Pediatrician in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,4,0.0002038682948309
+ChIJa2VjNg89rjsRXvqEzX6a1w4,Dr. Manjunath M K | Best ENT Specialist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014135360717772,77.55603790283203,gmaps_v2,hospital,4,0.0002038682948309
+ChIJdZpXLFU9rjsR7UrXwq3nyzE,Dr. Phani Bhushan R | Best Neonatologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.01413917541504,77.55606842041016,gmaps_v2,hospital,4,0.0002038682948309
+ChIJy1utel89rjsRBnBzsYAUe-I,Dr. Girish P V | Best Gastroenterologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.0142822265625,77.55606079101562,gmaps_v2,hospital,4,0.0002038682948309
+ChIJU0_3hDk9rjsRL79xR52m2AQ,Dr. Deepak Rudrappa | Best Orthopaedic Surgeon in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,3,0.0001535684182338
+ChIJwRFlMnk9rjsRmIwR8casl-I,Columbia Asia Referral Hospital - Yeshwanthpur,13.01412582397461,77.55599212646484,gmaps_v2,hospital,3,0.0001535684182338
+ChIJn_j4ckY9rjsR4t13bUZX0IE,Dr. Govind Nandakumar | Best Gastrointestinal Surgeon in Yeswanthpur | Manipal Hospital Yeswanthpur,13.01418685913086,77.55606842041016,gmaps_v2,hospital,3,0.0001535684182338
+ChIJhYQayiE9rjsR-Eu7ub6ecmw,Dr. Sujatha Ramesh | Best Allergist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014184951782228,77.55606842041016,gmaps_v2,hospital,3,0.0001535684182338
+ChIJ8wqDLac9rjsR7U0dduXd4Q8,Dr. Shankar Kurpad | Best Orthopaedic Surgeon in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014178276062012,77.55606842041016,gmaps_v2,hospital,3,0.0001535684182338
+ChIJiVarXVU9rjsRSQs8Tus8ups,Dr. Rajendra Prasad B | Best Vascular Surgeon in Yeswanthpur | Manipal Hospital Yeswanthpur,13.013916015625,77.55601501464844,gmaps_v2,hospital,3,0.0001535684182338
+ChIJa0QjLvg9rjsRjFHZpK_vtkQ,Dr. M S Prasad | Best Dentist in Yeshwanthpur | Manipal Hospital Yeshwanthpur,13.014187812805176,77.55612182617188,gmaps_v2,hospital,3,0.0001535684182338
+ChIJOc27avc9rjsRRlnsFaOfHp8,Dr. Sreenivasa Murthy T M | Best ENT Specialist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014115333557127,77.5561294555664,gmaps_v2,hospital,3,0.0001535684182338
+ChIJaxcon4E9rjsRc0yZlm-ywdI,Sidma Orthopaedic Center,13.008095741271973,77.55738067626953,gmaps_v2,hospital,3,0.0001535684182338
+ChIJt2uIBN89rjsRxmlyny7PwkQ,Dr. Navya P | Best Dermatologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014198303222656,77.55599212646484,gmaps_v2,hospital,3,0.0001529012211232
+ChIJxVcUF_A9rjsR6x1GUGRfMiQ,Dr. Anjana B | Best Pediatrician in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014189720153809,77.55606842041016,gmaps_v2,hospital,3,0.0001529012211232
+ChIJqeveJsw9rjsRJzTJyuI1LAk,Dr. Meena Gnanansekharan | Best Psychiatrist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014031410217283,77.55614471435547,gmaps_v2,hospital,3,0.0001529012211232
+ChIJWYaV1n89rjsRsbtb9r0MjSw,Dr. A Aruna Prasad | Best Dermatologist in Yeswanthpur | Manipal Hospital Yeswanthpur,13.014187812805176,77.5560073852539,gmaps_v2,hospital,3,0.0001529012211232
