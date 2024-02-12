@@ -3,7 +3,7 @@
     "range": "F9",
     "values": [
       [
-        "data.i500mtb.population.total_population"
+        "data.i500mtd.population.total_population"
       ]
     ]
   },
@@ -27,7 +27,7 @@
     "range": "F10",
     "values": [
       [
-        "data.i500mtb.household_distribution.total_hh"
+        "data.i500mtd.household_distribution.total_hh"
       ]
     ]
   },
@@ -91,7 +91,7 @@
     "range": "F11",
     "values": [
       [
-        "data.i500mtb.household_distribution.middle+affluent"
+        "data.i500mtd.household_distribution.middle+affluent"
       ]
     ]
   },
@@ -115,7 +115,7 @@
     "range": "F12",
     "values": [
       [
-        "data.i500mtb.affluence"
+        "data.i500mtd.affluence"
       ]
     ]
   },
@@ -139,7 +139,7 @@
     "range": "J9",
     "values": [
       [
-        "data.i500mtb.competition.count"
+        "data.i500mtd.competition.count"
       ]
     ]
   },
@@ -155,7 +155,7 @@
     "range": "J12",
     "values": [
       [
-        "data.i500mtb.avg_cost_for_two"
+        "data.i500mtd.avg_cost_for_two"
       ]
     ]
   },
@@ -260,6 +260,22 @@
     "values": [
       [
         "data.i15mind.site_name"
+      ]
+    ]
+  },
+  {
+    "range": "J4",
+    "values": [
+      [
+        "data.i15mind.distance_from_city_center"
+      ]
+    ]
+  },
+  {
+    "range": "J5",
+    "values": [
+      [
+        "data.i15mind.orientation_from_city_center"
       ]
     ]
   }

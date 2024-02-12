@@ -118,7 +118,7 @@ def get_google_reviews(hex_id, num_reviews):
 
 
 def get_reviews_per_day_(cid, number_of_votes, source):
-    if number_of_votes < 20 and source == 'gmaps_v2':
+    if number_of_votes < 12 and source == 'gmaps_v2':
         return {'date': 0, "number_of_reviews": 0}
     f = {'gmaps_v2': get_google_reviews, 'zomato': get_reviews_zomato}
     try:
@@ -212,40 +212,41 @@ def get_reviews_zomato(rest_id, number_of_reviews):
         date = datetime.strptime(date, "%b %d, %Y").timestamp()
         res['date'] = int(date)
     except:
-        res['date']=0
+        res['date'] = 0
     return res
 
 
-# if __name__ == '__main__':
-#     project_ids = ['130110_775547', '130009_776325', '130552_777638']
-#     project_ids += ['130631_776205', '128873_775969']
-# 
-#     for project_id in project_ids[:]:
-#         threshold = 30
-#         df = pd.read_csv(f"data/projects_data/{project_id}/raw/location_poi_data.csv")
-#         df_ = df[
-#             (df['number_of_votes'] > 0) & ((
-#                 df['category'].isin(['college', 'hospital', 'clinic', 'pharmacy'])) | ((df['category'] == 'school') & df[
-#                 'type'].isin(["pre_school", 'high_school', 'play_school', 'N_A'])))]
-#         df_.to_csv(f"data/projects_data/{project_id}/demand_generator_data.csv", index=False)
-#         mask = (df['number_of_votes'] > 0) & (df['category'].isin(
-#             ['clothing_store', 'shoe_store', 'restaurant', 'home_decor', 'jewelry_store', 'coffee_shop', 'supermarket',
-#              'electronic_store', 'cosmetic']))
-# 
-#         df = df[mask].reset_index(drop=True)
-#         # df['reviews_per_day'] = df['number_of_votes']
-#         # df = df.sort_values('reviews_per_day', ascending=False)
-#         print(df.shape)
-#         df = get_reviews_per_day(df, threshold=threshold)
-#         df.to_csv(f"data/projects_data/{project_id}/poi_data.csv", index=False)
-
 if __name__ == '__main__':
-    project_ids = ['130631_776205', '128873_775969']
+    # project_ids = ['130110_775547', '130009_776325', '130552_777638']
+    project_ids = ['129342_777438', '128050_776996']
+
     for project_id in project_ids[:]:
         threshold = 30
-        df = pd.read_csv(f"data/projects_data/{project_id}/competitors.csv")
+        df = pd.read_csv(f"data/projects_data/{project_id}/raw/location_poi_data.csv")
+        df_ = df[
+            (df['number_of_votes'] > 0) & ((
+                                               df['category'].isin(['college', 'hospital', 'clinic', 'pharmacy'])) | (
+                                                   (df['category'] == 'school') & df[
+                                               'type'].isin(["pre_school", 'high_school', 'play_school', 'N_A'])))]
+        df_.to_csv(f"data/projects_data/{project_id}/demand_generator_data.csv", index=False)
+        mask = ((df['brand_id'] != 'N_A') & (df['number_of_votes'] >= 0)) & (df['category'].isin(
+            ['clothing_store', 'shoe_store', 'restaurant', 'home_decor', 'jewelry_store', 'coffee_shop', 'supermarket',
+             'electronic_store', 'cosmetic', 'gym_fitness']))
+
+        df = df[mask].reset_index(drop=True)
+        # df['reviews_per_day'] = df['number_of_votes']
+        # df = df.sort_values('reviews_per_day', ascending=False)
         print(df.shape)
         df = get_reviews_per_day(df, threshold=threshold)
-        # df['reviews_per_day'] = df['number_of_votes']
-        df = df.sort_values('reviews_per_day', ascending=False)
-        df.to_csv(f"data/projects_data/{project_id}/competitors_ranked.csv", index=False)
+        df.to_csv(f"data/projects_data/{project_id}/poi_data.csv", index=False)
+
+# if __name__ == '__main__':
+#     project_ids = ['130959_775791', '129696_776307']
+#     for project_id in project_ids[:]:
+#         threshold = 30
+#         df = pd.read_csv(f"data/projects_data/{project_id}/competitors.csv")
+#         print(df.shape)
+#         df = get_reviews_per_day(df, threshold=threshold)
+#         # df['reviews_per_day'] = df['number_of_votes']
+#         df = df.sort_values('reviews_per_day', ascending=False)
+#         df.to_csv(f"data/projects_data/{project_id}/competitors_ranked.csv", index=False)

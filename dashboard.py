@@ -11,7 +11,7 @@ manager = sheets_api.GoogleSheetsManager()
 
 def create_report_from_template(title):
     template_id = "12CbqlizKSN7r66hpytciM_s6McKjsbiJeuNejMaDjpU"
-    new_sh = manager.client.copy(file_id=template_id, title=title, folder_id='1ILAdxTEs8wxWkH_7vLRm9mk04CNzd9sH')
+    new_sh = manager.client.copy(file_id=template_id, title=title, folder_id=folder_ids[env])
     return new_sh.id, new_sh.url
 
 
@@ -22,10 +22,10 @@ def get_sheet_info(site_id):
     cols = [col[0] for col in cur.description]
     data = cur.fetchall()
     try:
-        sheet_id = pd.DataFrame(data=data, columns=cols).to_dict('records')[0]['google_sheet_id']
+        sheet_id = pd.DataFrame(data=data, columns=cols).dropna(subset=[sheet_cols[env]]).to_dict('records')[0][sheet_cols[env]]
     except IndexError:
         sheet_id, _ = create_report_from_template(site_id)
-        query = """insert into site_reports_google_sheets (site_id, google_sheet_id) values (:site_id, :sheet_id)"""
+        query = f"""insert into site_reports_google_sheets (site_id, {sheet_cols[env]}) values (:site_id, :sheet_id)"""
         cur.execute(query, dict(site_id=site_id, sheet_id=sheet_id))
         con.commit()
     finally:
@@ -119,7 +119,7 @@ class Dashboard:
 
     def update_top_brands(self):
         df_ = pd.DataFrame(self.data['data']['i15mind']['top_brands']).sort_values(by='reviews_per_day',
-                                                                                   ascending=False)
+                                                                                    ascending=False)
         df = df_.copy()
         cols = {"brand_name": "Brand", "category": "Category",
                 "% of Catchment visitors": "% of Catchment visitors", "distance": "Distance from Site",
@@ -134,7 +134,7 @@ class Dashboard:
         self.report_worksheet.batch_update([{"range": "E74:H78", "values": df.head(5).values.tolist()}])
 
     def update_category_count(self):
-        buff = pd.DataFrame(self.data['data']['i500mtb']['pois']['data'])[['category', 'count']]
+        buff = pd.DataFrame(self.data['data']['i500mtd']['pois']['data'])[['category', 'count']]
         cat = pd.DataFrame(self.data['data']['i15mind']['pois']['data'])[['category', 'count']]
         cols = {"category": "Category", "count": "Count", "Percentage": "Percentage", "Top Brands": "Top Brands"}
         for comp_df in [buff, cat]:
@@ -171,7 +171,7 @@ class Dashboard:
         except KeyError:
             price_d1 = {}
         try:
-            price_d2 = dict(pd.DataFrame(self.data['data']['i500mtb']['competition']['pois']).groupby(
+            price_d2 = dict(pd.DataFrame(self.data['data']['i500mtd']['competition']['pois']).groupby(
                 'type').id.count().reset_index().values.tolist())
         except KeyError:
             price_d2 = {}
@@ -232,7 +232,7 @@ class Dashboard:
 
     def update_projects(self):
         comp_df_ = pd.DataFrame(self.data['data']['i15mind']['projects']['projects']).sort_values(by='final_num_units',
-                                                                                                  ascending=False)
+                                                                                                   ascending=False)
         comp_df = comp_df_.copy()
         cols = {"name": "Apartments", "Site Visitor count": "Site Visitor count",
                 "% of total visitors": "% of total visitors", "distance": "Distance from site",
@@ -276,11 +276,13 @@ class Dashboard:
 
 
 if __name__ == '__main__':
-    # id, url = create_report_from_template("Cultfit1")
-    projects = ['130110_775547', '130009_776325', '130552_777638']
-    projects += ['130631_776205', '128873_775969']
-    # print(url)
-    for proj_id in projects[:]:
+    env = 'prod'
+    folder_ids = {"test": '1g5QIquo6GZNA5wDQxfKI9KkYGNxQ2ukO', "prod": '1ILAdxTEs8wxWkH_7vLRm9mk04CNzd9sH'}
+    sheet_cols = {"test": 'google_sheet_id_test', "prod": 'google_sheet_id'}
+    projects = ['130110_775547', '130009_776325', '130552_777638', '130631_776205', '128873_775969', '129696_776307',
+                '130959_775791']
+    projects=['129342_777438', '128050_776996']
+    for proj_id in projects[1:]:
         d = Dashboard(proj_id=proj_id)
         d.generate_report()
-        time.sleep(1)
+        time.sleep(30)

@@ -53,7 +53,7 @@ class DataExtraction:
     def get_location_properties(self):
         query = f"""
         with poly as (select '{self.poly}' as geometry)
-        SELECT g.* FROM "bng_residential_properties" g join poly p on st_contains(st_geometryfromtext(p.geometry),st_point(g.lng,g.lat))"""
+        SELECT g.* FROM "ind_residential_properties_deduped" g join poly p on st_contains(st_geometryfromtext(p.geometry),st_point(g.lng,g.lat))"""
         data_dir = self.data_dir
         data_dir.mkdir(parents=True, exist_ok=True)
         df = wr.athena.read_sql_query(query, database='datasets_prep')
@@ -122,25 +122,26 @@ class DataExtraction:
 
     def extract_data(self):
         mthds = [
-            # self.get_location_household_data(),
+            self.get_location_household_data(),
             self.get_location_poi_data,
-            # self.get_location_zomato_data,
-            # self.get_location_population_data,
-            # self.get_location_projects_data,
-            # self.get_location_properties,
-            # self.get_location_affluence_data
+            self.get_location_zomato_data,
+            self.get_location_population_data,
+            self.get_location_projects_data,
+            self.get_location_properties,
+            self.get_location_affluence_data
         ]
         with ProcessPoolExecutor(max_workers=10) as executor:
             executor.map(self.execute_function, mthds)
 
 
-if __name__ == "__main__":
-    pids = ['130110_775547', '130009_776325', '130552_777638']
-    for pid in pids:  # ['130631_776205', '128873_775969']:
-        e = DataExtraction(pid)
-        e.extract_data()
-
 # if __name__ == "__main__":
-#     for pid in ['bangalore']:
-#         e = DataExtraction(pid, location_type='city')
-#         e.get_location_poi_data()
+#     # pids = ['130110_775547', '130009_776325', '130552_777638', '130631_776205', '128873_775969', '129696_776307',
+#     #         '130959_775791']
+#     for pid in ['129342_777438', '128050_776996']:
+#         e = DataExtraction(pid)
+#         e.extract_data()
+
+if __name__ == "__main__":
+    for pid in ['chennai']:
+        e = DataExtraction(pid, location_type='city')
+        e.get_location_poi_data()

@@ -32,7 +32,7 @@ def cool_decorator(func):
 
 def get_distance_from_site(df, report_id, id):
     if df.shape[0] == 0:
-        return df
+        return df.assign(distance=None)
     stores = read_catchment_file(report_id, id).dropna(subset=['lat'])
     stores = stores.to_dict('records')[0]
     lat = stores['lat']
@@ -144,6 +144,8 @@ def get_companies(poly, report_id, id):
     except:
         joined["India's Top 1000"] = 0
     joined['company_count'] = joined.sum(axis=1)
+    if joined.shape[0]==0:
+        return {}
     return joined.to_dict('records')[0]
 
 
@@ -239,7 +241,11 @@ def get_projects(poly, report_id, id):
     }
     joined = joined_.groupby("store_name").agg(**aggs).reset_index()
     joined = joined.drop(columns=["store_name"])
-    resp = joined.to_dict(orient="records")[0]
+    print(joined)
+    if joined.shape[0]>0:
+        resp = joined.to_dict(orient="records")[0]
+    else:
+        resp=dict(zip(['num_units', 'default_units', 'count_projects'],[0,0,0]))
     resp['projects'] = joined_[
         ['id', "name", 'lat', 'lng', 'final_num_units', 'default_units', 'distance']].sort_values(
         by='final_num_units', ascending=False).fillna(0).to_dict(orient="records")
@@ -252,7 +258,8 @@ def get_affluence_index(poly, report_id, id):
     aff_ind_gdf = gpd.GeoDataFrame(aff_ind[["geoid", "affluence_index"]],
                                    geometry=gpd.GeoSeries.from_wkt(aff_ind['geometry']))
     stores_gdf = gpd.GeoDataFrame([{"store_name": 1, "geometry": poly}], geometry='geometry')
-    joined = gpd.sjoin(stores_gdf, aff_ind_gdf, how="left", predicate='intersects')
+    joined = gpd.sjoin(stores_gdf, aff_ind_gdf, how="inner", predicate='intersects')
+    joined = joined[joined['affluence_index'] > 0]
     joined.to_csv(out_dir / "affluence_index.csv", index=False)
     aff_ind_city = joined.groupby("store_name").agg({"affluence_index": "mean"}).reset_index()
     aff_index = np.mean(joined['affluence_index'])
@@ -285,12 +292,14 @@ def get_competition(poly, report_id, id):
     malls = pd.read_csv(data_dir / f"projects_data/{id}/competitors_ranked.csv")
     malls = gpd.GeoDataFrame(malls, geometry=gpd.points_from_xy(malls['lng'], malls['lat']))
     stores_gdf = gpd.GeoDataFrame([{"store_name": 1, "geometry": poly}], geometry='geometry')
-    joined = gpd.sjoin(stores_gdf, malls, how="left", predicate='contains')
+    joined = gpd.sjoin(stores_gdf, malls, how="inner", predicate='contains')
     joined = joined.sort_values(by=['reviews_per_day'], ascending=False)
     joined = joined[['id', 'name', 'number_of_votes', 'rating', 'lat', 'lng', 'reviews_per_day', 'competitor_type']]
     joined = joined.fillna({"reviews_per_day": 0})
-    joined = get_distance_from_site(joined, report_id, id)
-    joined = joined[joined['distance'] > 0].reset_index(drop=True)
+    print(joined)
+    if joined.shape[0] > 0:
+        joined = get_distance_from_site(joined, report_id, id)
+        joined = joined[joined['distance'] > 0].reset_index(drop=True)
     joined['type'] = joined['competitor_type']
     joined.to_csv(out_dir / 'competition.csv', index=False)
     resp = {"count": joined.shape[0], 'pois': joined.to_dict('records')}
@@ -304,11 +313,11 @@ def get_malls(poly, report_id, id):
     stores_gdf = gpd.GeoDataFrame([{"store_name": 1, "geometry": poly}], geometry='geometry')
     joined = gpd.sjoin(stores_gdf, malls, how="inner", predicate='intersects')
     joined = joined.sort_values(by=['reviews_per_day'], ascending=False)
-    joined = joined[['id', 'name', 'number_of_votes', 'ratings', 'lat', 'lng', 'reviews_per_day']]
+    joined = joined[['id', 'name', 'number_of_votes', 'rating', 'lat', 'lng', 'reviews_per_day']]
     joined = joined.fillna({"reviews_per_day": 0})
     print(joined)
     joined = get_distance_from_site(joined, report_id, id)
-    if joined.shape[0]>0:
+    if joined.shape[0] > 0:
         joined = joined[joined['distance'] > 0].reset_index(drop=True)
         joined.to_csv(out_dir / 'malls.csv', index=False)
     resp = {"count": joined.shape[0], 'pois': joined.to_dict('records')}
@@ -393,15 +402,17 @@ def get_prop_type(desc, fallback):
 def get_rent_and_sale_prices(poly, report_id, id):
     df = pd.read_csv(data_dir / f'projects_data/{id}/raw/location_properties_data.csv')
     df = df.fillna({"price": 0, 'type': '', 'trans_type': '', 'desc': '', 'name': ''})
-    df['trans_type'] = df[['desc', 'trans_type']].apply(lambda x: get_trans_type(x[0], x[1]), axis=1)
-    df['type'] = df[['name', 'type']].apply(lambda x: get_prop_type(x[0], x[1]), axis=1)
-    mask = (df['type'] == 'AP') & (df['trans_type'].isin(['buy', 'rent']))
-    df = df[mask]
+    df['trans_type'] = df['buy_rent']
+    df['type'] = df['property_type']
+    df['trans_type'] = df['trans_type'].str.lower()
+    mask = (df['type'] == 'Apartment') & (df['trans_type'].isin(['buy', 'rent']))
+    df = df[mask].drop(columns=['property_type', 'buy_rent']).reset_index(drop=True)
     df_gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['lng'], df['lat']))
     stores_gdf = gpd.GeoDataFrame([{"store_name": 1, "geometry": poly}], geometry='geometry')
     joined_ = stores_gdf.sjoin(df_gdf, how="inner", predicate="contains").sort_values(by="price", ascending=False)
     dict_list = []
     joined_ = get_distance_from_site(joined_, report_id, id).fillna((0))
+    print(joined_)
     g = joined_[df.columns.tolist() + ['distance']].groupby('trans_type')
     for name, group in g:
         d = {'trans_type': name, 'top_pois': group.to_dict('records')}
@@ -416,6 +427,8 @@ def get_rent_and_sale_prices(poly, report_id, id):
            }
     ).reset_index().drop(columns=['store_name'])
     # joined = dict(joined.values.tolist())
+    if top_pois.shape[0]<=0:
+        top_pois=top_pois.assign(trans_type=None)
     joined = joined.merge(top_pois, how='left', on='trans_type').fillna(0)
 
     # res = {}

@@ -8,6 +8,14 @@ Accept: application/json
 GET http://127.0.0.1:8000/site_report/create/?lat=13.0009569&lng=77.6325712&name=Orion Avenue&travel_mode=driving&cost_type=time&cost=15
 Accept: application/json
 
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=12.969693199052141&lng=77.6307545633031&name=Cambridge Layout&travel_mode=driving&cost_type=distance&cost=2500
+Accept: application/json
+
+
+###
+GET http://127.0.0.1:8000/site_report/create/?lat=13.095999774716756&lng=77.57916090477161&name=Yelanhanka New Town&travel_mode=driving&cost_type=distance&cost=2500
+Accept: application/json
 
 ###
 GET http://127.0.0.1:8000/site_report/create/?lat=13.0552603&lng=77.7638939&name=Orion Uptown&travel_mode=driving&cost_type=buffer&cost=500
@@ -47,11 +55,11 @@ GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/13011
 Accept: application/json
 
 ###
-GET http://127.0.0.1:8000/site_report/085867a0-6608-485c-a40d-c809825af8ef/130636_775869/projects/
+GET http://127.0.0.1:8000/site_report/ed374c4c-6dc3-473b-867e-ff707e347939/130552_777638/projects/
 Accept: application/json
 
 ###
-GET http://127.0.0.1:8000/site_report/1/affluence
+GET http://127.0.0.1:8000/site_report/5fca8372-db67-4e32-9c34-17818bca7c19/130552_777638/affluence
 Accept: application/json
 
 ###
@@ -59,7 +67,7 @@ GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/13011
 Accept: application/json
 
 ###
-GET http://127.0.0.1:8000/site_report/c763cfe3-eb59-4598-ad6b-3223a5844bdf/129065_775925/competition/
+GET http://127.0.0.1:8000/site_report/c72e8b10-34f9-46d5-94ed-bf54976b7b8b/129696_776307/competition/
 Accept: application/json
 
 ###
@@ -71,7 +79,7 @@ GET http://127.0.0.1:8000/site_report/1f78f3ac-d799-470b-9738-2c4da5053cee/13011
 Accept: application/json
 
 ###
-GET http://127.0.0.1:8000/site_report/2f78f3ac-d799-470b-9738-2c4da5053cee/cf7eb825-a703-4b10-abea-066546376aa8/property_price/
+GET http://127.0.0.1:8000/site_report/ed374c4c-6dc3-473b-867e-ff707e347939/130552_777638/property_price/
 Accept: application/json
 
 ###

@@ -1,7 +1,5 @@
 import json
-import os
 
-import pandas as pd
 from pyforest import *
 
 import numpy as np
@@ -18,9 +16,8 @@ import alphashape
 from pyquadkey2 import quadkey
 import itertools
 import math
-import shapely as geom
-import shapely
 from shapely import wkt
+import shapely as geom
 
 
 def split_large_polygon_by_density(polygon, points, base_polygon_area=0):
@@ -399,6 +396,92 @@ def gt_50votes_fn(series_custome_series):
     return len([i for i in series_custome_series if i[3] >= 50])
 
 
+import random
+
+
+def fetch_city_counts_for_competitors(city_id, competitor_brand_ids=[], anchor_brand_ids=[]):
+    competitor_brand_ids = competitor_brand_ids + [str(random.randint(10000, 100000)),
+                                                   str(random.randint(10000, 100000))] if len(
+        competitor_brand_ids) < 2 else competitor_brand_ids
+    anchor_brand_ids = anchor_brand_ids + [str(random.randint(10000, 100000)),
+                                           str(random.randint(10000, 100000))] if len(
+        anchor_brand_ids) < 2 else anchor_brand_ids
+
+    city_query = f"""
+    select 
+        lvl_16_quadkey
+        , category
+        , city_id
+        , city_name,
+        0 as branded ,
+        0 as verified,
+        count(*) as total,
+        0 as high_voted_gt_50
+    from 
+    (
+        select 
+            case when A.brand_id in {tuple(competitor_brand_ids)} then 'competitor'
+            when A.brand_id in {tuple(anchor_brand_ids)} then 'anchor' 
+            else 'other' end as category,
+            B.id as city_id,
+            B.name as city_name,
+            bing_tile_quadkey(bing_tile_at(A.lat, A.lng, 16)) lvl_16_quadkey
+        from datasets_prep.ind_poi_data_v2_gold A 
+        cross join (
+            select *
+            from hyperlocal_analysis_ind_dev.ind_top_8_cities_geometry
+            where id = {city_id}
+        ) B
+        where st_intersects(
+                st_point(A.lng, A.lat),
+                st_geometryfromtext(B.geometry)
+            )
+        and A.brand_id in {tuple(competitor_brand_ids + anchor_brand_ids)}
+        and A.active = 1
+        )
+        group by lvl_16_quadkey,
+            category,
+            city_id,
+            city_name
+    """
+    data = wr.athena.read_sql_query(city_query, database='hyperlocal_analysis_ind_dev', ctas_approach=False)
+    return data
+
+
+def fetch_isochrone_counts_for_competitors(isochrone_polygon, competitor_brand_ids=[], anchor_brand_ids=[], ):
+    competitor_brand_ids = competitor_brand_ids + [str(random.randint(10000, 100000)),
+                                                   str(random.randint(10000, 100000))] if len(
+        competitor_brand_ids) < 2 else competitor_brand_ids
+    anchor_brand_ids = anchor_brand_ids + [str(random.randint(10000, 100000)),
+                                           str(random.randint(10000, 100000))] if len(
+        anchor_brand_ids) < 2 else anchor_brand_ids
+
+    isochrone_query = f"""
+    select 
+        category,
+        0 as branded ,
+        0 as verified,
+        count(*) as total,
+        0 as high_voted_gt_50
+    from
+    (
+    select
+        case when A.brand_id in {tuple(competitor_brand_ids)} then 'competitor'
+            when A.brand_id in {tuple(anchor_brand_ids)} then 'anchor' 
+            else 'other' end as category
+        from datasets_prep.ind_poi_data_v2_gold A 
+        where st_intersects(
+                st_point(A.lng, A.lat),
+                st_geometryfromtext('""" + isochrone_polygon.wkt + f"""')
+            )
+            and A.brand_id in {tuple(competitor_brand_ids + anchor_brand_ids)}
+            and A.active = 1
+        ) group by category
+    """
+    data = wr.athena.read_sql_query(isochrone_query, database='hyperlocal_analysis_ind_dev', ctas_approach=False)
+    return data
+
+
 def get_categories_and_count_type_needed():
     category_wise_count_needed = {
         "vibrancy": {
@@ -470,6 +553,12 @@ def get_categories_and_count_type_needed():
         },
         'affluence_index': {
             'affluence': 'total'
+        },
+        'competitor': {
+            'competitor': 'total'
+        },
+        'anchor': {
+            'anchor': 'total'
         }
     }
 
@@ -481,7 +570,7 @@ def get_categories_and_count_type_needed():
     return all_category_wise_count_needed_pair
 
 
-def get_city_grid_level_counts(city_id, level_to_get_neighbours, quantile=0.95):
+def get_city_grid_level_counts(city_id, level_to_get_neighbours, quantile=0.95, competitor_ids=[], anchor_id=[]):
     base_count_data = wr.athena.read_sql_query(
         """ SELECT * FROM "hyperlocal_analysis_ind_dev"."ind_poi_counts_by_city_quadkeys" where city_id={} """.format(
             city_id),
@@ -562,8 +651,8 @@ def get_city_grid_level_counts(city_id, level_to_get_neighbours, quantile=0.95):
     base_count_data = base_count_data[base_count_data['category'] != 'park']
     parks_count_data = wr.athena.read_sql_query(parks_data_city_query, database='hyperlocal_analysis_ind_dev', )
     apparments_count_data = wr.athena.read_sql_query(apparments_query, database='hyperlocal_analysis_ind_dev', )
-    # base_count_data = base_count_data.append(parks_count_data).append(apparments_count_data)
-    base_count_data = pd.concat([base_count_data, parks_count_data, apparments_count_data])
+    competitor_anchors = fetch_city_counts_for_competitors(city_id, competitor_ids, anchor_id)
+    base_count_data = pd.concat([base_count_data, parks_count_data, apparments_count_data, competitor_anchors])
 
     all_category_wise_count_needed_pair = get_categories_and_count_type_needed()
     base_count_data['count_needed'] = base_count_data[['category', 'branded', 'verified', 'total']].apply(
@@ -598,7 +687,7 @@ def get_city_grid_level_counts(city_id, level_to_get_neighbours, quantile=0.95):
     return city_quantiles
 
 
-def pois_count_for_isochrone(isochrone_polygon):
+def pois_count_for_isochrone(isochrone_polygon, competitor_ids=[], anchor_ids=[]):
     query_for_pois_in_isochrone = """ select category
     , sum((CASE WHEN ((brand_id IS NOT NULL) AND (brand_id <> 'N_A')) THEN 1 ELSE 0 END)) branded
     , sum((CASE WHEN (verified IN (1, 2, 4)) THEN 1 ELSE 0 END)) verified
@@ -684,8 +773,10 @@ def pois_count_for_isochrone(isochrone_polygon):
                                                 ctas_approach=False)
     affluence_query = wr.athena.read_sql_query(affluence_query, database='hyperlocal_analysis_ind_dev',
                                                ctas_approach=False)
-    # all_pois_counts = all_pois_counts.append(park_counts).append(road_area_counts).append(aparments_counts).append(affluence_query)
-    all_pois_counts = pd.concat([all_pois_counts, park_counts, road_area_counts, aparments_counts, affluence_query])
+    competitor_anchors = fetch_isochrone_counts_for_competitors(isochrone_polygon, competitor_ids, anchor_ids)
+
+    all_pois_counts = pd.concat(
+        [all_pois_counts, park_counts, road_area_counts, aparments_counts, affluence_query, competitor_anchors])
 
     all_category_wise_count_needed_pair = get_categories_and_count_type_needed()
     all_pois_counts['count_needed'] = all_pois_counts[['category', 'branded', 'verified', 'total']].apply(
@@ -724,13 +815,13 @@ def create_index_from_city_isochrone_counts(isochrone_counts, city_counts, isoch
     return category_indexs
 
 
-def load_city_count(city_id, level, quantile=0.99):
+def load_city_count(city_id, level, quantile=0.99, competitor_ids=[], anchor_id=[]):
     base_path = "revenue_score/cache_data_for_city_grids/"
     os.makedirs(base_path, exist_ok=True)
     if os.path.exists(f"{base_path}city_count_{city_id}_{level}.pkl"):
         city_count = pickle.load(open(f"{base_path}city_count_{city_id}_{level}.pkl", "rb"))
     else:
-        city_count = get_city_grid_level_counts(city_id, level, quantile)
+        city_count = get_city_grid_level_counts(city_id, level, quantile, competitor_ids, anchor_id)
         pickle.dump(city_count, open(f"{base_path}city_count_{city_id}_{level}.pkl", "wb"))
 
     return city_count, 0.35 * 4 ** level
@@ -811,6 +902,10 @@ def create_grouped_indexes_from_indexs(indexs):
         },
         'affluence_index': {
             'affluence': 1.0
+        },
+        'competitor_index': {
+            'competitor': 0.6,
+            'anchor': 0.4
         }
     }
 
@@ -822,7 +917,7 @@ def create_grouped_indexes_from_indexs(indexs):
                                                           columns=['index_type', 'category', 'weight', 'index'])
     all_category_wise_count_needed_pair_df['weighted_index'] = all_category_wise_count_needed_pair_df['index'] * \
                                                                all_category_wise_count_needed_pair_df['weight']
-    # print(all_category_wise_count_needed_pair_df[all_category_wise_count_needed_pair_df['index'] == -1])
+
     all_category_wise_count_needed_pair_df = all_category_wise_count_needed_pair_df[
         all_category_wise_count_needed_pair_df['index'] != -1]
     all_category_wise_count_needed_pair_df = all_category_wise_count_needed_pair_df.groupby('index_type').agg(
@@ -841,17 +936,27 @@ def create_revenue_score_from_indexs(grouped_indexs, weights_dict):
     return score / sum(weights_dict.values())
 
 
-def generate_revenue_score(lat, lng, travel_mode, cost_type, cost):
-    isochrone_polygon, isochrone_area = get_isochrone_and_area(lat, lng, type=travel_mode, cost_type=cost_type,
+def generate_revenue_score(lat, lng, travel_mode, cost_type, cost, competitor_brand_ids, anchor_brand_ids,
+                           weight_score):
+    # print(lat, lng, travel_mode, cost_type, cost, competitor_brand_ids)
+    # competitor_brand_ids = ['jockeyindia', 'zivame', 'nykdbynykaa', 'enamor', 'adityabirla', 'vanheusenindia', 'jockey']
+    # anchor_brand_ids = ['blown', 'bouncehere', 'bblunt', 'nailashes', 'nykdbynykaa', 'sugarcosmetics', 'globaldesi',
+    #                     'naturals', 'shopforaurelia', 'biba', 'yesmadam', 'rangriti', 'nykaa', 'nailbox', 'bibaindia',
+    #                     'fabindia']
+
+    isochrone_polygon, isochrone_area = get_isochrone_and_area(lat=lat, lng=lng, type=travel_mode, cost_type=cost_type,
                                                                cost=cost)
 
     grid_level_to_fetch = get_level_for_n_grids(isochrone_area / 0.35)
-    city_counts, total_area_at_this_level = load_city_count(3, grid_level_to_fetch)
+    city_counts, total_area_at_this_level = load_city_count(3, grid_level_to_fetch, 0.95, competitor_brand_ids,
+                                                            anchor_brand_ids)
 
-    poi_counts_isochrone = pois_count_for_isochrone(isochrone_polygon)
+    poi_counts_isochrone = pois_count_for_isochrone(isochrone_polygon, competitor_brand_ids, anchor_brand_ids)
+
     indexs = create_index_from_city_isochrone_counts(poi_counts_isochrone, city_counts, isochrone_area,
                                                      grid_level_to_fetch,
                                                      total_area_at_this_level)
+
     indexs_df = pd.DataFrame.from_dict(indexs, orient='index').reset_index()
     indexs_df.columns = ['category', 'index']
 
@@ -863,29 +968,39 @@ def generate_revenue_score(lat, lng, travel_mode, cost_type, cost):
 
     all_merged = indexs_df.merge(isochrone_poi_counts_df, on='category', how='left').merge(city_poi_counts_df,
                                                                                            on='category', how='left')
+
     grouped_indexs = create_grouped_indexes_from_indexs(indexs)
 
-    weights_dict = {
-        'affluence_index': 0.19,
-        'apartments_index': 0.19,
-        'fashion_index': 0.19,
-        'vibrancy': 0.14,
-        'healthcare_index': 0.10,
-        'company_index': 0.10,
-        'malls_index': 0.05,
-        'supermarket_index': 0.04,
-    }
-
+    # weights_dict = {
+    #     'competitor_index': 0.20,
+    #     'affluence_index': 0.19,
+    #     'apartments_index': 0.19,
+    #     'fashion_index': 0.19,
+    #     'vibrancy': 0.14,
+    #     'healthcare_index': 0.10,
+    #     'company_index': 0.10,
+    #     'malls_index': 0.05,
+    #     'supermarket_index': 0.04,
+    # 
+    # }
+    weights_dict = weight_score
     revenue_score = create_revenue_score_from_indexs(grouped_indexs, weights_dict) * 20
     return revenue_score, grouped_indexs
 
 
 if __name__ == '__main__':
-    lat = 13.0552603
-    lng = 77.7638939
+    lat = 13.095999774716756
+    lng = 77.57916090477161
     name = 'Orion Avenue'
     travel_mode = 'driving'
-    cost_type = 'time'
-    cost = 15
-    revenue_score, grouped_indexs = generate_revenue_score(lat, lng, travel_mode, cost_type, cost)
-    print(revenue_score, grouped_indexs)
+    cost_type = 'distance'
+    cost = 2500
+    anc = ["blown", "bouncehere", "bblunt", "nailashes", "nykdbynykaa", "sugarcosmetics", "globaldesi",
+           "naturals", "shopforaurelia", "biba", "yesmadam", "rangriti", "nykaa", "nailbox", "bibaindia",
+           "fabindia"]
+    prim = ["jockeyindia", "zivame", "nykdbynykaa", "enamor", "adityabirla", "vanheusenindia", "jockey"]
+    weights = {"competitor_index": 0.2, "affluence_index": 0.19, "apartments_index": 0.19, "fashion_index": 0.19,
+               "vibrancy": 0.14, "healthcare_index": 0.1, "company_index": 0.1, "malls_index": 0.05,
+               "supermarket_index": 0.04}
+    revenue_score, grouped_indexs = generate_revenue_score(lat, lng, travel_mode, cost_type, cost, prim, anc,weights)
+    print(revenue_score, json.dumps(grouped_indexs))

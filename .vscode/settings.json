@@ -1,0 +1,12 @@
+{
+    "python.autoComplete.extraPaths": [],
+    "python.analysis.extraPaths": [
+        "src,utilities"
+    ],
+    "python.analysis.typeCheckingMode": "off",
+    "python.terminal.executeInFileDir": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "jupyter.interactiveWindow.textEditor.executeSelection": true,
+    "dataWrangler.experiments.fastCsvParsing": true
+}
