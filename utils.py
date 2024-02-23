@@ -1,5 +1,6 @@
 import sqlite3
 import time
+from concurrent.futures import ProcessPoolExecutor
 
 import shapely
 import json
@@ -8,6 +9,7 @@ from hashlib import md5
 import pandas as pd
 import uuid
 import revenue_score as R
+import calculations_v5 as C
 
 
 def cluster_name_locality(func):
@@ -50,74 +52,6 @@ def get_street_name_locality(lat, lng,
         return street_name + neighbourhood, locality
     else:
         return "", None
-
-
-def connect_to_db():
-    conn = sqlite3.connect('/home/jyotiraditya/PycharmProjects/SiteReports/site_reports_v2.db')
-    cur = conn.cursor()
-    query = '''
-    CREATE TABLE IF NOT EXISTS ind_site_reports_v2 (
-    report_id TEXT,
-    id TEXT,
-    site_name TEXT,
-    lat REAL,
-    lng REAL,
-    geometry TEXT,
-    location varchar(255),
-    catchment_type TEXT,
-    top_brands TEXT,
-    pois TEXT,
-    projects TEXT,
-    apartments TEXT,
-    median_price TEXT,
-    household_distribution TEXT,
-    competition TEXT,
-    population TEXT,
-    affluence REAL,
-    avg_cost_for_two REAL,
-    revenue_score REAL,
-    high_streets TEXT,
-    shopping_malls TEXT,
-    poi_counts TEXT,
-    projects_counts TEXT,
-    created_at INTEGER
-);
-
-    '''
-    cur.execute(query)
-    return conn, cur
-
-
-def get_project_info(report_id=None, id=None):
-    if report_id and id:
-        query = """select * from ind_site_reports_v2 where report_id =:report_id and id=:id"""
-    elif report_id:
-        query = """select * from ind_site_reports_v2 where report_id =:report_id """
-    elif id:
-        query = """select * from ind_site_reports_v2 where  id=:id"""
-    else:
-        query = """select * from ind_site_reports_v2 """
-
-    con, cur = connect_to_db()
-    cur.execute(query, dict(report_id=report_id, id=id))
-    cols = [col[0] for col in cur.description]
-    data = cur.fetchall()
-    cur.close()
-    con.close()
-    stores = pd.DataFrame(data=data, columns=cols)
-    return stores
-
-
-def get_all_reports():
-    query = """select * from ind_site_reports_v2 """
-    con, cur = connect_to_db()
-    cur.execute(query)
-    cols = [col[0] for col in cur.description]
-    data = cur.fetchall()
-    cur.close()
-    con.close()
-    stores = pd.DataFrame(data=data, columns=cols)
-    return stores
 
 
 # @retry(exceptions=(ValueError,),tries=5,delay=10)
@@ -190,65 +124,63 @@ def buffer_a_polygon_in_meters(polygon, meters):
     return polygon
 
 
-def create_project(lat, lng, name, travel_mode, cost_type, cost):
-    conn, cur = connect_to_db()
+def execute_function(function, loc_info):
+    loc_info_ = loc_info[0]
+    kwargs = loc_info[1]
+    return function(poly=loc_info_[0], lat=loc_info_[1], lng=loc_info_[2], **kwargs)
+
+
+def execute_functions(functions, loc_info, *args, **kwargs):
+    with ProcessPoolExecutor(max_workers=10) as executor:
+        res = executor.map(execute_function, list(functions.values()),
+                           [[loc_info, kwargs] for _ in range(len(functions))]
+                           )
+        res = list(res)
+        return dict(zip(functions.keys(), res))
+
+
+def get_initial_data(lat, lng, name, travel_mode, cost_type, cost, competitor_brand_ids, anchor_brand_ids):
     if cost_type == 'buffer':
-        isochrone_id = f'i{cost}mtb'
+        isochrone_id = f'i{cost}mtd'
         isochrone_polygon = buffer_a_polygon_in_meters(shapely.Point(lng, lat), cost).wkt
-        revenue_score = None
-        weights = {}
     else:
         isochrone_polygon, isochrone_id = get_isochrone(lat, lng, travel_mode=travel_mode, cost_type=cost_type,
                                                         cost=cost)
-        isochrone_polygon = isochrone_polygon.wkt
-        # revenue_score, weights = R.generate_revenue_score(lat, lng, travel_mode, cost_type, cost)
+        isochrone_polygon = isochrone_polygon
     location = get_street_name_locality(lat, lng)[0]
-    # google_sheet_id = create_report_from_template(f'Site Report - {name.title()}')
-    id = f"{int(lat * 10000)}_{int(lng * 10000)}"
-    report_id = str(uuid.uuid4())
     site_name = f"{name.title()} - {location}"
-    query_params = dict(site_name=site_name, lat=lat, lng=lng, isochrone_polygon=isochrone_polygon,
-                        location=location, isochrone_id=isochrone_id, id=id, report_id=report_id,
-                        created_at=int(time.time()), revenue_score=None, grouped_indexes=None)
-    query = '''INSERT INTO ind_site_reports_v2 (
-    report_id,
-    id,
-    site_name,
-    lat,
-    lng,
-    location,
-    catchment_type,
-    geometry,
-    created_at
-    
-) VALUES (
-    :report_id,
-    :id,
-    :site_name,
-    :lat,
-    :lng,
-    :location,
-    :isochrone_id,
-    :isochrone_polygon,
-    :created_at
-) returning report_id,id;
-'''
-    cur.execute(query, query_params)
-    project_id = (zip(('report_id', 'id'), cur.fetchone()))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return {'project_id': project_id}
+    funcs = dict(
+        avg_cost_for_two=C.get_avg_cft,
+        population=C.get_population_index,
+        demand_generators=C.get_demand_generator_data,
+        companies=C.get_companies,
+        household_distribution=C.get_income_distribution,
+        shopping_malls=C.get_malls,
+        high_streets=C.get_high_streets,
+        competition=C.get_competition
+    )
+    resp = execute_functions(funcs, (isochrone_polygon, lat, lng,),
+                             travel_mode=travel_mode, cost_type=cost_type, cost=cost,
+                             competitor_brand_ids=competitor_brand_ids, anchor_brand_ids=anchor_brand_ids)
+    return resp
 
 
-if __name__ == '__main__':
-    # lat, lng = 13.063170, 77.620569
-    lat, lng = 12.887373, 77.596901
-    configs = ({"lat": lat, "lng": lng, "name": "Cultfit", "travel_mode": "driving", "cost_type": "time", "cost": 15},
-               {"lat": lat, "lng": lng, "name": "Cultfit", "travel_mode": "driving", "cost_type": "buffer",
-                "cost": 500},
-               {"lat": lat, "lng": lng, "name": "Cultfit", "travel_mode": "driving", "cost_type": "buffer",
-                "cost": 1000}
-               )
-    for i in configs:
-        create_project(**i)
+def get_secondary_data(lat, lng, name, travel_mode, cost_type, cost):
+    if cost_type == 'buffer':
+        isochrone_id = f'i{cost}mtd'
+        isochrone_polygon = buffer_a_polygon_in_meters(shapely.Point(lng, lat), cost).wkt
+    else:
+        isochrone_polygon, isochrone_id = get_isochrone(lat, lng, travel_mode=travel_mode, cost_type=cost_type,
+                                                        cost=cost)
+        isochrone_polygon = isochrone_polygon
+    # location = get_street_name_locality(lat, lng)[0]
+    # site_name = f"{name.title()} - {location}"
+    funcs = dict(
+        apartments=C.get_rent_and_sale_prices,
+        projects=C.get_projects,
+        pois=C.get_category_count,
+        revenue_score=R.generate_revenue_score
+    )
+    resp = execute_functions(funcs, (isochrone_polygon, lat, lng), travel_mode=travel_mode, cost_type=cost_type,
+                             cost=cost, catchment_type=isochrone_id)
+    return resp

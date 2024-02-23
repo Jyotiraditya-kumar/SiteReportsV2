@@ -51,11 +51,11 @@ def get_h3_indexes_from_polygon(polygon: shapely.Polygon | shapely.MultiPolygon,
 
 def get_city_polygon(city_name, filename):
     if filename is None:
-        df = pd.read_csv('/home/jyotiraditya/PycharmProjects/jupyterProject/notebooks/data/top_10_cities_2d.csv')
+        df = pd.read_csv('/media/jyotiraditya/Ultra Touch/repos/SiteReports/src/ind_top_cities_geometry.csv')
     else:
         df = pd.read_csv(filename)
     city_poly: shapely.Polygon = shapely.from_wkt(
-        df[df['Name'].str.lower() == city_name.lower()]['geometry'].values.tolist()[0])
+        df[df['name'].str.lower() == city_name.lower()]['geometry'].values.tolist()[0])
     return city_poly
 
 
