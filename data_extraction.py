@@ -1,4 +1,5 @@
 from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
 
 import requests
 import io
@@ -59,7 +60,7 @@ class QueryAthena:
             print('Query "{}" finished.'.format(self.query))
             self.times['query_execution_time'] = time.time() - st
             st = time.time()
-            df = self.obtain_data()
+            df = self.obtain_data4()
             self.times['data_retrieval_time'] = time.time() - st
             print("Data Retrieved from S3")
             return df
@@ -70,9 +71,19 @@ class QueryAthena:
     def obtain_data(self):
         import subprocess
         file = f"s3://{self.bucket}/{self.folder}/{self.filename}.csv"
-        out_file = f"/media/jyotiraditya/Ultra Touch/repos/SiteReports/s3_output/{self.filename}.csv"
+        out_file = f"s3_output/{self.filename}.csv"
         subprocess.call(['aws', 's3', 'cp', file, out_file])
         df = pd.read_csv(out_file)
+        Path(out_file).unlink()
+        return df
+    
+    def obtain_data4(self):
+        import subprocess
+        file = f"s3://{self.bucket}/{self.folder}/{self.filename}.csv"
+        out_file = f"s3_output/{self.filename}.csv"
+        subprocess.call([ 's5cmd', 'cp', file, out_file])
+        df = pd.read_csv(out_file)
+        Path(out_file).unlink()
         return df
 
     def obtain_data2(self):
@@ -91,13 +102,15 @@ class QueryAthena:
     def obtain_data3(self):
         try:
             self.resource = boto3.resource('s3', region_name=self.region_name, )
-            out_file = f"/media/jyotiraditya/Ultra Touch/repos/SiteReports/s3_output/{self.filename}.csv"
+            out_file = f"s3_output/{self.filename}.csv"
 
             response = self.resource \
                 .Bucket(self.bucket) \
                 .download_file(self.folder + "/" + self.filename + '.csv', out_file)
+            df=pd.read_csv(out_file)
+            Path(out_file).unlink()
 
-            return pd.read_csv(out_file)
+            return df
         except Exception as e:
             print(e)
 
@@ -109,6 +122,7 @@ import json
 def get_query_result(query,database):
     Query=QueryAthena(query,database)
     query_result = Query.run_query()
+    # query_result=execute_athena_query_lambda(query,database)
     return query_result
     
 

@@ -104,5 +104,5 @@ GET http://127.0.0.1:8000/site_report/initial_data/?lat=13.063665&lng=77.586943&
 Accept: application/json
 
 ###
-GET http://127.0.0.1:8000/site_report/secondary_data/?lat=13.063665&lng=77.586943&name=Cultfit&travel_mode=driving&cost_type=time&cost=15
+GET http://127.0.0.1:8000/site_report/secondary_data/?lat=13.063665&lng=77.586943&name=Cultfit&travel_mode=driving&cost_type=time&cost=15&primary_comp=['bata','zudio']&anchor_comp=['dominos','mcdonalds']&weights={"competitor_index": 0.2, "affluence_index": 0.19, "apartments_index": 0.19, "fashion_index": 0.19, "vibrancy": 0.14, "healthcare_index": 0.1, "company_index": 0.1, "malls_index": 0.05, "supermarket_index": 0.04}
 Accept: application/json

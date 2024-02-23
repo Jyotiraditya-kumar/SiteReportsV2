@@ -1,4 +1,5 @@
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
+from data_extraction import QueryAthena
 
 category_wise_count_needed = {
     "vibrancy": {
@@ -532,7 +533,9 @@ def get_isochrone_and_area(lat, lng, cost, type='driving', cost_type='time'):
 
 
 def read_athena_query(query, database='hyperlocal_analysis_ind_dev', ctas_approach=False):
-    return wr.athena.read_sql_query(query, database=database, ctas_approach=ctas_approach)
+    # return wr.athena.read_sql_query(query, database=database, ctas_approach=ctas_approach)
+    query=QueryAthena(query,database=database)
+    return query.run_query()
 
 
 def fetch_pois_count_for_isochrone(isochrone_polygon, competitor_ids=[], anchor_ids=[]):
@@ -614,7 +617,7 @@ def fetch_pois_count_for_isochrone(isochrone_polygon, competitor_ids=[], anchor_
     queries = {"all_pois_counts": query_for_pois_in_isochrone, "parks_count": parks_data_isochrone_query,
                "road_area_counts": road_area_grided_query, "apartments_count": aparments_data_isochrone_query,
                "affluence_query": affluence_query, "competitors_anchors": competitor_anchors_query}
-    with ProcessPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         results = executor.map(read_athena_query, queries.values())
         results = list(results)
     d = dict(zip(queries.keys(), results))
@@ -717,9 +720,9 @@ def read_city_max_data(city_id):
 
 def generate_revenue_score(lat, lng, travel_mode, cost_type, cost, catchment_type, competitor_brand_ids=[],
                            anchor_brand_ids=[],
-                           weight_score=None, *args, **kwargs):
-    if not weight_score:
-        weight_score = {
+                           location_score_weights=None, *args, **kwargs):
+    if not location_score_weights:
+        location_score_weights = {
             'competitor_index': 0.20,
             'affluence_index': 0.19,
             'apartments_index': 0.19,
@@ -757,7 +760,7 @@ def generate_revenue_score(lat, lng, travel_mode, cost_type, cost, catchment_typ
     )
 
     grouped_indexs = create_grouped_indexes_from_indexs(indexs)
-    revenue_score = create_revenue_score_from_indexs(grouped_indexs, weight_score) * 20
+    revenue_score = create_revenue_score_from_indexs(grouped_indexs, location_score_weights) * 20
     return {"revenue_score": revenue_score,"grouped_indexs": grouped_indexs}
 
 
