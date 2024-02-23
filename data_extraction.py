@@ -6,6 +6,7 @@ import boto3
 import time
 import pandas as pd
 
+
 class QueryAthena:
 
     def __init__(self, query, database):
@@ -16,10 +17,12 @@ class QueryAthena:
         self.s3_output = 's3://' + self.bucket + '/' + self.folder
         self.region_name = 'us-east-2'
         self.query = query
+        self.times = {}
 
     def load_conf(self, q):
         try:
             self.client = boto3.client('athena', region_name=self.region_name, )
+
             response = self.client.start_query_execution(
                 QueryString=q,
                 QueryExecutionContext={
@@ -39,6 +42,7 @@ class QueryAthena:
     def run_query(self):
         queries = [self.query]
         for q in queries:
+            st = time.time()
             res = self.load_conf(q)
         try:
             query_status = None
@@ -50,11 +54,13 @@ class QueryAthena:
                 print(query_status)
                 if query_status == 'FAILED' or query_status == 'CANCELLED':
                     raise Exception('Athena query with the string "{}" failed or was cancelled'.format(self.query))
-                if query_status != 'SUCCEEDED' :
+                if query_status != 'SUCCEEDED':
                     time.sleep(1)
             print('Query "{}" finished.'.format(self.query))
-
+            self.times['query_execution_time'] = time.time() - st
+            st = time.time()
             df = self.obtain_data()
+            self.times['data_retrieval_time'] = time.time() - st
             print("Data Retrieved from S3")
             return df
 
@@ -62,6 +68,14 @@ class QueryAthena:
             print(e)
 
     def obtain_data(self):
+        import subprocess
+        file = f"s3://{self.bucket}/{self.folder}/{self.filename}.csv"
+        out_file = f"/media/jyotiraditya/Ultra Touch/repos/SiteReports/s3_output/{self.filename}.csv"
+        subprocess.call(['aws', 's3', 'cp', file, out_file])
+        df = pd.read_csv(out_file)
+        return df
+
+    def obtain_data2(self):
         try:
             self.resource = boto3.resource('s3', region_name=self.region_name, )
 
@@ -74,18 +88,52 @@ class QueryAthena:
         except Exception as e:
             print(e)
 
+    def obtain_data3(self):
+        try:
+            self.resource = boto3.resource('s3', region_name=self.region_name, )
+            out_file = f"/media/jyotiraditya/Ultra Touch/repos/SiteReports/s3_output/{self.filename}.csv"
+
+            response = self.resource \
+                .Bucket(self.bucket) \
+                .download_file(self.folder + "/" + self.filename + '.csv', out_file)
+
+            return pd.read_csv(out_file)
+        except Exception as e:
+            print(e)
+
 
 import urllib.parse
+import json
 
+
+def get_query_result(query,database):
+    Query=QueryAthena(query,database)
+    query_result = Query.run_query()
+    return query_result
+    
 
 def execute_athena_query_lambda(query, database):
-    lambda_url = "https://iegirpm6rdw72ozprrnkialdcm0fqgtn.lambda-url.us-east-2.on.aws/"
-    print(query)
-    url = f"{lambda_url}?query={urllib.parse.quote(query)}&database={database}"
-    resp = requests.get(url)
-    print(url)
-    print(resp.text)
-    df = pd.read_csv(io.BytesIO(resp.content), encoding='utf8')
+    client = boto3.client('lambda')
+    # lambda_url = "https://iegirpm6rdw72ozprrnkialdcm0fqgtn.lambda-url.us-east-2.on.aws/"
+    payload = {
+        "queryStringParameters": {
+            "query": query,
+            "database": database
+        }}
+    response = client.invoke(
+        FunctionName='athena_query_result',
+        Payload=json.dumps(payload),
+    )
+
+    # print(response)
+    # url = f"{lambda_url}?query={urllib.parse.quote(query)}&database={database}"
+    # resp = requests.get(url)
+    # print(url)
+    # data = resp.json()
+    data = response['Payload'].read()
+    data = json.loads(data)
+    print(data)
+    df = pd.DataFrame(data)
     return df
 
 
@@ -107,9 +155,8 @@ class DataExtraction:
         from ind_poi_data_v2_gold d where brand_id<>'N_A' and category in ('clothing_store', 'shoe_store', 'restaurant', 'home_decor', 'jewelry_store', 'coffee_shop', 'supermarket',
              'electronic_store', 'cosmetic', 'gym_fitness') and st_contains(st_geometryfromtext('{self.poly}'),st_point(lng,lat))
             """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df = df.drop_duplicates(subset=['id', 'source'])
         return df
 
@@ -128,9 +175,8 @@ class DataExtraction:
                 when brand_id in {tuple(anchor_brand_ids)} then 'anchor_competitor' end as competitor_type
         from ind_poi_data_v2_gold d where brand_id in {tuple(competitor_brand_ids + anchor_brand_ids)} and st_contains(st_geometryfromtext('{self.poly}'),st_point(lng,lat))
             """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df = df.drop_duplicates(subset=['id', 'source'])
         return df
 
@@ -138,9 +184,8 @@ class DataExtraction:
         query = f"""
         with poly as (select '{self.poly}' as geometry)
         SELECT g.* FROM "ind_residential_properties_gold" g join poly p on st_contains(st_geometryfromtext(p.geometry),st_point(g.lng,g.lat)) where property_type='Apartment' and buy_rent in ('Buy','Rent')"""
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df = df.drop_duplicates(subset=['id', 'source'])
         return df
 
@@ -173,10 +218,7 @@ class DataExtraction:
         # 	)
         # where intersection <> 0"""
 
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df=wr.athena.read_sql_query(query,database='datasets_prep',ctas_approach=False)
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        df=get_query_result(query,'datasets_prep')
         # df['geometry'] = df['geometry'].astype(str)
         return df
 
@@ -185,9 +227,8 @@ class DataExtraction:
         with poly as (select '{self.poly}' as geometry)
         SELECT g.* FROM "ind_residential_projects_gold" g join poly p on st_contains(st_geometryfromtext(p.geometry),st_point(g.lng,g.lat))
     """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df = df.drop_duplicates(subset=['id', 'source'])
         return df
 
@@ -195,9 +236,8 @@ class DataExtraction:
         query = f"""
         SELECT ews_hh,lig_hh,mig_hh,aig_hh,eig_hh,avg_household_income,geom FROM "datasets_prep"."population_income_distribution" where st_intersects(st_geometryfromtext('{self.poly}'),st_geometryfromtext(geom))
     """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df['geom'] = df['geom'].astype(str)
         return df
 
@@ -209,18 +249,15 @@ class DataExtraction:
     """
         data_dir = self.data_dir
         data_dir.mkdir(parents=True, exist_ok=True)
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         df.to_csv(data_dir / "location_affluence_data.csv", index=False)
 
     def get_avg_cft(self):
         query = f"""
         select avg(cast(additional_data['cost_for_two'] as double)) as avg_cost_for_two from zomato_restaurants_silver where st_contains(st_geometryfromtext('{self.poly}'),st_point(lng,lat))
     """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        df=get_query_result(query,'datasets_prep')
         avg_cft = df['avg_cost_for_two'][0]
         return avg_cft
 
@@ -228,18 +265,16 @@ class DataExtraction:
         query = f"""
         select * from datasets_prep.bng_malls where st_intersects(st_geometryfromtext('{self.poly}'),st_geometryfromtext(wkt))
     """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         return df
 
     def get_high_streets(self):
         query = f"""
         select cluster_name,locality,polygon_updated,area,lat,lng from datasets_prep.bng_high_streets where st_intersects(st_geometryfromtext('{self.poly}'),st_geometryfromtext(polygon_updated))
     """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
+        
+        df=get_query_result(query,'datasets_prep')
         return df
 
     def get_demand_generators(self):
@@ -257,10 +292,8 @@ where (
 	)
 	and st_contains(st_geometryfromtext('{self.poly}'), st_point(lng, lat))
 group by category """
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
-
+        
+        df=get_query_result(query,'datasets_prep')
         return df
 
     def get_companies_data(self):
@@ -271,10 +304,8 @@ group by category """
                 where top_category='company'
                 and st_contains(st_geometryfromtext('{self.poly}'), st_point(lng, lat))
                 group by type"""
-        Query = QueryAthena(query, 'datasets_prep')
-        df = Query.run_query()
-        # df = execute_athena_query_lambda(query, 'datasets_prep')
-
+        
+        df=get_query_result(query,'datasets_prep')
         return df
 
     def execute_function(self, func):
@@ -309,8 +340,10 @@ if __name__ == "__main__":
                "demand_gen": a.get_demand_generators,
                "income_dist": a.get_location_income_distribution_data, "malls": a.get_malls,
                "companies": a.get_companies_data, "high_streets": a.get_high_streets}
+    # print(a.get_location_population_data())
     times_taken = []
-    for i in range(5):
+    for i in range(3):
+        a = DataExtraction(poly)
         time_taken = {}
         for query in queries:
             f = queries[query]
